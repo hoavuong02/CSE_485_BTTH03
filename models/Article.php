@@ -67,5 +67,8 @@ class Article{
         $this->noidung = $hinhanh;
     }
 
-    
+    public function convertToArray(){
+        return array("ma_bviet"=>$this->ma_bviet, "tieude"=>$this->tieude, "ten_bhat"=>$this->ten_bhat, "tomtat"=>$this->tomtat, "noidung"=>$this->noidung, "hinhanh"=>$this->hinhanh, "ma_tloai"=>$this->ma_tloai, "ma_tgia"=>$this->ma_tgia);
+    }
+
 }

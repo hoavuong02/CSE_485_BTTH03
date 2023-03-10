@@ -1,5 +1,6 @@
 <?php
-    require APP_ROOT.'\configs\include\header_global.php';
+    // require APP_ROOT.'\configs\include\header_global.php';
+    // var_dump($articles);
 ?>
 
         <img src="C:\xampp\htdocs\CSE485_2023_BTTH02\assets\images\slideshow\slide01.jpg" alt="" srcset="">

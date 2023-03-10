@@ -1,7 +1,7 @@
 <?php
 require_once 'vendor/autoload.php';
-$loader = new \Twig\Loader\FilesystemLoader("template");
-$twig = new Twig\Environment($loader);
+// $loader = new \Twig\Loader\FilesystemLoader("templates");
+// $twig = new Twig\Environment($loader);
 
 $controller = isset($_GET['controller'])?   $_GET['controller']:'home';
 $action     = isset($_GET['action'])?       $_GET['action']:'index';

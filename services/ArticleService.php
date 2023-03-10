@@ -16,7 +16,8 @@ class ArticleService{
         $articles = [];
         while($row = $stmt->fetch()){
             $article = new Article($row['ma_bviet'], $row['tieude'], $row['ten_bhat'], $row['tomtat'], $row['noidung'], $row['hinhanh'], $row['ma_tloai'], $row['ma_tgia']);
-            array_push($articles,$article);
+            $array = $article->convertToArray();
+            array_push($articles,$array);
         }
         // Mảng (danh sách) các đối tượng Article Model
         return $articles;
@@ -31,8 +32,9 @@ class ArticleService{
         $stmt = $conn->query($sql);
         $row = $stmt->fetch();
         $article = new Article($row['ma_bviet'], $row['tieude'], $row['ten_bhat'], $row['tomtat'], $row['noidung'], $row['hinhanh'], $row['ma_tloai'], $row['ma_tgia']);
+        $array = $article->convertToArray();
 
-        return $article;
+        return $array;
     }
 
     public function getCategorybyArticle($id){
