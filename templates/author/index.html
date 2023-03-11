@@ -1,0 +1,42 @@
+{% extends "/layout/layoutAdmin.html" %}
+
+{% block main %}
+
+    <div class="row">
+    <div class="col-sm">
+    <a href="index.php?controller=author&&action=Routeradd" class="btn btn-success">Thêm mới</a>
+    <table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tên Tác Giả</th>
+            <th scope="col">Hình Tác Giả</th>
+            <th>Sửa</th>
+            <th>Xóa</th>
+        </tr>
+    </thead>
+    {%for au in author%}
+    <tbody>
+        <tr>
+            <th scope="row">{{loop.index}}</th>
+            <td>{{au.ten_tgia}}</td>
+            <td><img style = "width: 150px;" src="assets/{{au.hinh_tgia}}" alt="Not found image"></td>
+            <td>
+                <a href="index.php?controller=author&&action=Routeredit&id={{au.ma_tgia}} "><i class="fa-solid fa-pen-to-square"></i></a>
+            </td>
+            <td>
+                
+                <a  onclick = "return confirm('Bạn có chắc chắn muốn xóa tác giả {{au.ten_tgia}} ?');" href="index.php?controller=author&&action=delete&id={{au.ma_tgia}}"   > <i class="fa-solid fa-trash"></i> </a>
+
+            </td>
+        </tr>
+
+    </tbody>
+
+    {% endfor %}
+    </table>
+
+
+    </div>
+    </div>
+{% endblock %}

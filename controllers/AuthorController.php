@@ -1,14 +1,18 @@
 <?php
+require_once 'vendor/autoload.php';
 include("services/AuthorService.php");
 // include("models/Article.php");
 
 class AuthorController{
     public function index(){
         // require 'configs/include/headerAdmin_global.php';
+        $loader = new \Twig\Loader\FilesystemLoader("templates");
+        $twig = new Twig\Environment($loader);
 
         $authorService = new AuthorService();
         $authors = $authorService-> getAllAuthor();
-        include("views/author/author.php");
+        $data['author'] = $authors;
+        echo $twig->render('/author/index.html', $data); 
         // header("Location: index.php?controller=category");
     }
 
@@ -20,7 +24,9 @@ class AuthorController{
     }
 
     public function Routeradd(){
-        include("views/author/add_author.php");
+        $loader = new \Twig\Loader\FilesystemLoader("templates");
+        $twig = new Twig\Environment($loader);
+        echo $twig->render('/author/add_author.html');
     }
 
     //delete
@@ -33,9 +39,14 @@ class AuthorController{
     //edit
 
     public function Routeredit(){
+        $loader = new \Twig\Loader\FilesystemLoader("templates");
+        $twig = new Twig\Environment($loader);
+
         $AuthorService = new AuthorService();
         $editAuthorId = $AuthorService ->editAuthorSql();
-        include("views/Author/edit_author.php");
+
+        $data['author'] = $editAuthorId;
+        echo $twig->render('/author/edit_author.html',$data); 
     }
 
     public function edit(){

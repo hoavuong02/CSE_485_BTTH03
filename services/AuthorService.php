@@ -25,7 +25,8 @@ class AuthorService{
         // Bước 03: Trả về dữ liệu
         while($row = $stmt->fetch()){
             $author = new Author($row['ma_tgia'], $row['ten_tgia'],$row['hinh_tgia']);
-            array_push($authors,$author); //add author vào mảng
+            $array = $author->convertToArray();
+            array_push($authors,$array); //add author vào mảng
         }
 
         return $authors;
@@ -152,14 +153,14 @@ class AuthorService{
                         }}
                     }
 
-                    header("Location: index.php?controller=author&success=Xóa Thành Công!");
+                    header("Location: index.php?controller=author");
         }
         else{
             $stmt->execute();
             if (file_exists($pathImg)) {                       // If image file exists
                 $unlink = unlink($pathImg);                    // Delete image file
             }   
-            header("Location: index.php?controller=author&success=Xóa Thành Công!");
+            header("Location: index.php?controller=author");
 
         }
 
@@ -186,8 +187,8 @@ class AuthorService{
         $row = $stmt->fetch();
         $author = new Author($row['ma_tgia'], $row['ten_tgia'],$row['hinh_tgia']);
         // array_push($categorys,$category); //add category vào mảng
-    
-        return $author;
+        $array = $author->convertToArray();
+        return $array;
     }
 
     public function  processEditAuthor(){
