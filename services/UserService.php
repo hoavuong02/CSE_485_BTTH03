@@ -12,11 +12,18 @@
             $showAllUserSql = "SELECT * FROM user order by ten_dnhap";
             $stmt = $conn->getConnection()->prepare($showAllUserSql);
             $stmt->execute();
+            // $users = [];
+            // while($row = $stmt->fetch()){
+            //     $user = new User($row['ten_dnhap'], $row['mat_khau'], $row['email'], $row['ngay_dki'], $row['admin']);
+            //     array_push($users,$user);
+            // }
             $users = [];
             while($row = $stmt->fetch()){
-                $user = new User($row['ten_dnhap'], $row['mat_khau'], $row['email'], $row['ngay_dki'], $row['admin']);
-                array_push($users,$user);
+                $user = new User($row['ten_dnhap'], $row['mat_khau'], $row['email'], $row['ngay_dki'], $row['admin'], $row['hashCode'], $row['active'] );
+                $array = $user->convertToArray();
+                array_push($users,$array);
             }
+            return $users;
         
             
             return $users;
@@ -28,8 +35,9 @@
             $txtUserName= $_POST['txtUserName'];
             $txtUserPass= $_POST['txtUserPass'];
             $txtUserEmail= $_POST['txtUserEmail'];
-            $txtUserAdmin= $_POST['txtUserAdmin'];           
-            $addUserSql = "INSERT INTO user(ten_dnhap,mat_khau,email,ngay_dki,admin) VALUES ('$txtUserName','$txtUserPass','$txtUserEmail',current_timestamp(), '$txtUserAdmin')";
+            $txtUserAdmin= $_POST['txtUserAdmin'];    
+            $txtActive= $_POST['txtUserActive'];  
+            $addUserSql = "INSERT INTO user(ten_dnhap,mat_khau,email,ngay_dki,admin,active) VALUES ('$txtUserName','$txtUserPass','$txtUserEmail',current_timestamp(), '$txtUserAdmin','$txtUserActive')";
             $stmt = $conn->getConnection()->prepare($addUserSql);
             if($stmt->execute()){
                 header("Location: index.php?controller=user&action=index");
@@ -49,9 +57,15 @@
             
             $stmt = $conn->getConnection()->prepare($showUserWithId);
             $stmt->execute();
-            $userWithId = $stmt->fetch();
-            $user = new User($userWithId['ten_dnhap'], $userWithId['mat_khau'], $userWithId['email'], $userWithId['ngay_dki'], $userWithId['admin']);
-            return $user;
+            // $userWithId = $stmt->fetch();
+            // $user = new User($userWithId['ten_dnhap'], $userWithId['mat_khau'], $userWithId['email'], $userWithId['ngay_dki'], $userWithId['admin']);
+            // return $user;
+            $userSelect = $stmt->fetch();
+            // $users = [];
+            $user = new User($userSelect['ten_dnhap'], $userSelect['mat_khau'], $userSelect['email'], $userSelect['ngay_dki'], $userSelect['admin'], $userSelect['hashCode'], $userSelect['active'] );
+            $array = $user->convertToArray();
+            
+            return $array;
 
         }
 
@@ -61,8 +75,9 @@
             $userName = $_POST['txtUserName'];
             $password = $_POST['txtPasword'];
             $email = $_POST['txtEmail'];
-            $admin = $_POST['txtAdmin'];           
-            $updateUserSql = "UPDATE user SET mat_khau = '$password', email = '$email', admin = '$admin' WHERE ten_dnhap =  '$userName'";
+            $admin = $_POST['txtAdmin'];     
+            $active = $_POST['txtActive'];
+            $updateUserSql = "UPDATE user SET mat_khau = '$password', email = '$email', admin = '$admin',active = $active WHERE ten_dnhap =  '$userName'";
             $stmt = $conn->getConnection()->prepare($updateUserSql);
             $stmt->execute();
             if($stmt->execute()){
@@ -79,6 +94,7 @@
             $conn = new DBConnection();
             // Bước 02: Truy vấn DL
             $getId = $_GET['id'];
+            // echo $getId;
             $deleteCategorySql = "DELETE FROM user WHERE ten_dnhap = '$getId'  ";
             $stmt = $conn->getConnection()->prepare( $deleteCategorySql);
             $stmt->execute();
@@ -121,20 +137,23 @@
             }
             
         }
-        public function userIsAdmin(){
+        public function getUserLogin(){
             // Bước 01: Kết nối DB Server
             //require db
             $conn = new DBConnection();
             // Bước 02: Truy vấn DL
-            session_start();
+            // session_start();
             $userName = $_SESSION['user'];
             $isAdminSql = "SELECT * FROM `user` WHERE ten_dnhap='$userName'";
             
             $stmt = $conn->getConnection()->prepare($isAdminSql);
             $stmt->execute();
             $userLogin = $stmt->fetch();
-            $user = new User($userLogin['ten_dnhap'], $userLogin['mat_khau'], $userLogin['email'], $userLogin['ngay_dki'], $userLogin['admin']);
-            return $user;
+            // $users = [];
+            $user = new User($userLogin['ten_dnhap'], $userLogin['mat_khau'], $userLogin['email'], $userLogin['ngay_dki'], $userLogin['admin'], $userLogin['hashCode'], $userLogin['active'] );
+            $array = $user->convertToArray();
+            
+            return $array;
             // $isAdmin = $userLogin['admin'];
             // return $isAdmin;
         }
@@ -149,76 +168,116 @@
             return $userCounted;
             
         }
-
-        public function signUpUser(){
-            $conn = new DBConnection();       
-            if(isset($_POST['txtUser'])) 
-            {
-            $txtUserNameSU = $_POST['txtUser'];
-            $txtUserPassSU = $_POST['txtPassword'];
-            $txtEmailSU = $_POST['txtEmail'];                  
-            $checkExitUserSql = "SELECT * FROM user";
-            $stmt = $conn->getConnection()->prepare($checkExitUserSql);
-            $row = $stmt->fetchAll();
-            $stmt->execute();
-            $foundName = false;
-            $foundEmail = false;
-            $users = [];
-            while($row = $stmt->fetch()){
-                $user = new User($row['ten_dnhap'], $row['mat_khau'], $row['email'], $row['ngay_dki'], $row['admin']);
-                array_push($users,$user);
-            }
-                // if($row['ten_dnhap']==$txtUserNameSU){
-                //     $foundName = true; // trùng lặp đánh dấu true
-            //var_dump( $users);
-                // }
-            foreach($users as $value) {
-                //echo $value->getTenDangNhap();
-                if ($value->getTenDangNhap() == $txtUserNameSU ) {
-                    $foundName = true; // trùng lặp đánh dấu true
-                    break ; // thoát khỏi cả hai vòng lặp while và foreach
-                }
+        public function processRegister() {
+            include 'configs/includes/Utilities/email_sender.php';
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
-                if ($value->getEmail() == $txtEmailSU ) {
-                    $foundEmail = true; // trùng lặp đánh dấu true
-                    break ; // thoát khỏi cả hai vòng lặp while và foreach
-                }
-                }
-                echo $foundName;
-                // foreach ($row['email'] as $key => $value) {
-                //     // echo $row[$key];
-                //     if ($value == $txtUserName ) {
-                //         $found = true; // trùng lặp đánh dấu true
-                //         break 2; // thoát khỏi cả hai vòng lặp while và foreach
-                //     }
-                // }
-            
-           
-
-            if($foundName){                   
-                echo "<script>
-                    alert('Tên đăng nhập đã tồn tại');
-                    window.location.href = 'index.php?controller=signUp&action=index';
-                </script> " ;
-            }              
-            if ($foundEmail) { 
-                echo "<script>
-                    alert('Tên đăng nhập đã tồn tại');
-                    window.location.href = 'index.php?controller=signU&action=index';
-                </script> " ;
+                $userName = $_POST['txtUser'];
+                $password = $_POST['txtPassword'];
+                $email = $_POST['txtEmail'];
+                
+                $hash = rand(1000, 9999);
+        
+                $addUser = "INSERT INTO user(ten_dnhap, mat_khau, email,ngay_dki, hashCode) VALUES ('$userName','$password','$email',current_timestamp(), '$hash')";
+                $dbConn = new DBConnection();
+                $conn = $dbConn->getConnection();
+        
+                $stmt = $conn->prepare($addUser);
+                $stmt->execute();
+        
+                $emailServer = new MyEmailServer();
+                $emailSender = new EmailSender($emailServer);
+                $emailSender->send($email, "This is a registration email", "http://localhost/CSE485_CNW/CSE_485_BTTH03/index.php?controller=signUp&action=active&userName=$userName&hashCode=$hash");
+                
             }
-            
-            else{
-                $pushUserSql = "INSERT INTO user(ten_dnhap,mat_khau,email,ngay_dki) VALUES ('$txtUserNameSU','$txtUserPassSU','$txtEmailSU',current_timestamp())";
-                $stmt = $conn->getConnection()->prepare($pushUserSql);
-                if($stmt->execute()){
+        }
+
+        public function activeRegisterUser(){
+            $conn = new DBConnection(); 
+            if(isset($_GET['ten_dnhap'])) {
+                $getUserName = $_GET['ten_dnhap'];
+                $getHashCode = $_GET['hashCode'];
+                echo $getUserName;
+                echo $getHashCode;
+                $sqlUpdateActive = "SELECT * from user where ten_dnhap = '$getUserName' ";
+                $stmt = $conn->getConnection()->prepare( $sqlUpdateActive);
+                $stmt->execute();
+                $row= $stmt->fetch();
+                $user = new User($row['ten_dnhap'], $row['mat_khau'], $row['email'], $row['ngay_dki'], $row['admin'], $row['hashCode'], $row['active'] );
+                $array = $user->convertToArray();
+                // echo $array['hashCode'];
+                if($getHashCode == $array['hashCode']) {
+                    $updateUser = "UPDATE user SET active = '1' WHERE ten_dnhap =  '$getUserName'";
+                    $stmt = $conn->getConnection()->prepare($updateUser);
+                    $stmt->execute();
+                    echo "Ban da dang ki thanh cong";
                     header("Location: index.php?controller=login&action=index");
                 }
+            } else {
+                echo "Kích hoạt thất bại";
+            }
+     
+        }
+        // public function signUpUser(){
+        //     $conn = new DBConnection();       
+        //     if(isset($_POST['txtUser'])) 
+        //     {
+        //     $txtUserNameSU = $_POST['txtUser'];
+        //     $txtUserPassSU = $_POST['txtPassword'];
+        //     $txtEmailSU = $_POST['txtEmail'];                  
+        //     $checkExitUserSql = "SELECT * FROM user";
+        //     $stmt = $conn->getConnection()->prepare($checkExitUserSql);
+        //     $row = $stmt->fetchAll();
+        //     $stmt->execute();
+        //     $foundName = false;
+        //     $foundEmail = false;
+        //     $users = [];
+        //     while($row = $stmt->fetch()){
+        //         $user = new User($row['ten_dnhap'], $row['mat_khau'], $row['email'], $row['ngay_dki'], $row['admin']);
+        //         array_push($users,$user);
+        //     }
+              
+        //     foreach($users as $value) {
+        //         //echo $value->getTenDangNhap();
+        //         if ($value->getTenDangNhap() == $txtUserNameSU ) {
+        //             $foundName = true; // trùng lặp đánh dấu true
+        //             break ; // thoát khỏi cả hai vòng lặp while và foreach
+        //         }
                 
-                }
+        //         if ($value->getEmail() == $txtEmailSU ) {
+        //             $foundEmail = true; // trùng lặp đánh dấu true
+        //             break ; // thoát khỏi cả hai vòng lặp while và foreach
+        //         }
+        //         }
+        //         echo $foundName;
+                
+            
            
-        }
-        }
+
+        //     if($foundName){                   
+        //         echo "<script>
+        //             alert('Tên đăng nhập đã tồn tại');
+        //             window.location.href = 'index.php?controller=signUp&action=index';
+        //         </script> " ;
+        //     }              
+        //     if ($foundEmail) { 
+        //         echo "<script>
+        //             alert('Tên đăng nhập đã tồn tại');
+        //             window.location.href = 'index.php?controller=signU&action=index';
+        //         </script> " ;
+        //     }
+            
+        //     else{
+        //         $pushUserSql = "INSERT INTO user(ten_dnhap,mat_khau,email,ngay_dki) VALUES ('$txtUserNameSU','$txtUserPassSU','$txtEmailSU',current_timestamp())";
+        //         $stmt = $conn->getConnection()->prepare($pushUserSql);
+        //         if($stmt->execute()){
+        //             header("Location: index.php?controller=login&action=index");
+        //         }
+                
+        //         }
+           
+        // }
+        // }
         public function countArticle(){
             $conn = new DBConnection();           
             $countArticleSql = "SELECT COUNT(baiviet.ma_bviet)  FROM `baiviet` ";
@@ -253,6 +312,7 @@
                 unset($_SESSION['user']);
 
             }
+            
 
         }
     }
