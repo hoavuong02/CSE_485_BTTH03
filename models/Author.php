@@ -35,7 +35,6 @@ class Author{
     public function setHinhTacGia($hinh_tgia){
         $this->hinh_tgia = $hinh_tgia;
     }
-
     public function convertToArray(){
         return array("ma_tgia"=>$this->ma_tgia, "ten_tgia"=>$this->ten_tgia, "hinh_tgia"=>$this->hinh_tgia);
     }

@@ -34,27 +34,6 @@ class ArticleController{
         echo $twig->render('/article/list.html', $data); 
     }
 
-    public function edit(){
-        $serviceDetail = new ArticleService();
-        $detailArticle = $serviceDetail->getDetailArticle();
-        $nameCategory = $serviceDetail->getCategorybyArticle($detailArticle->getMaTheLoai());
-        $nameAuthor = $serviceDetail->getAuthorbyArticle($detailArticle->getMaTacGia());
-
-        $nameCategoryExcept = $serviceDetail->getALLCategoryExcept($detailArticle->getMaTheLoai());
-        $nameAuthorExcept = $serviceDetail->getAllAuthorExcept($detailArticle->getMaTacGia());
-        include("views/article/edit_article.php");
-    }
-
-    public function processEdit(){
-        $articleService = new ArticleService();
-        $processEdit = $articleService-> processEditArticle(); 
-    }
-
-    public function delete(){
-        $articleService = new ArticleService();
-        $delete = $articleService-> deleteArticle(); 
-    }
-    
     public function add(){
         $loader = new \Twig\Loader\FilesystemLoader("templates");
         $twig = new Twig\Environment($loader);
@@ -69,5 +48,39 @@ class ArticleController{
     public function processAdd(){
         $articleService = new ArticleService();
         $processAdd = $articleService-> addArticle();
+        header("Location: index.php?controller=article&action=list");
     }
+
+    public function edit(){
+        $loader = new \Twig\Loader\FilesystemLoader("templates");
+        $twig = new Twig\Environment($loader);
+        $serviceDetail = new ArticleService();
+        $detailArticle = $serviceDetail->getDetailArticle();
+        $nameCategory = $serviceDetail->getCategorybyArticle($detailArticle['ma_tloai']);
+        $nameAuthor = $serviceDetail->getAuthorbyArticle($detailArticle['ma_tgia']);
+
+        $nameCategoryExcept = $serviceDetail->getALLCategoryExcept($detailArticle['ma_tloai']);
+        $nameAuthorExcept = $serviceDetail->getAllAuthorExcept($detailArticle['ma_tgia']);
+
+        $data['article'] = $detailArticle;
+        $data['nameCategory'] = $nameCategory;
+        $data['nameAuthor'] = $nameAuthor;
+
+        $data['nameCategoryExcept'] = $nameCategoryExcept;
+        $data['nameAuthorExcept'] = $nameAuthorExcept;
+
+        echo $twig->render('/article/edit.html', $data); 
+    }
+
+    public function processEdit(){
+        $articleService = new ArticleService();
+        $processEdit = $articleService-> processEditArticle(); 
+    }
+
+    public function delete(){
+        $articleService = new ArticleService();
+        $delete = $articleService-> deleteArticle(); 
+    }
+    
+
 }

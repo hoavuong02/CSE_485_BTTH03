@@ -25,7 +25,8 @@ class CategoryService{
             // Bước 03: Trả về dữ liệu
             while($row = $stmt->fetch()){
                 $category = new Category($row['ma_tloai'], $row['ten_tloai']);
-                array_push($categorys,$category); //add category vào mảng
+                $array = $category->convertToArray(); //Chuyển đổi object về array
+                array_push($categorys,$array); //add category vào mảng
             }
 
             return $categorys;
@@ -91,11 +92,11 @@ class CategoryService{
                         $stmt3->execute();
                         $stmt4 = $conn->prepare($deleteCategorySql);
                         $stmt4->execute();
-                        header("Location: index.php?controller=category&success=Xóa Thành Công!");
+                        header("Location: index.php?controller=category");
             }
             else{
                 $stmt->execute();
-                header("Location: index.php?controller=category&success=Xóa Thành Công!");
+                header("Location: index.php?controller=category");
             }
 
         } //ngoặc của deleteCategorySql
@@ -119,9 +120,10 @@ class CategoryService{
         // Bước 03: Trả về dữ liệu
         $row = $stmt->fetch();
         $category = new Category($row['ma_tloai'], $row['ten_tloai']);
-        // array_push($categorys,$category); //add category vào mảng
+        $array = $category->convertToArray();
+        // array_push($categorys, $array ); //add category vào mảng
     
-        return $category;
+        return $array;
     }
 
     public function  processEditCategory(){

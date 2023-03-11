@@ -26,7 +26,6 @@ class Category{
     public function setten_tloai($ten_tloai){
         $this->title = $ten_tloai;
     }
-
     public function convertToArray(){
         return array("ma_tloai"=>$this->ma_tloai, "ten_tloai"=>$this->ten_tloai);
     }

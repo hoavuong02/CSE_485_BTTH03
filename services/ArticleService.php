@@ -50,20 +50,21 @@ class ArticleService{
         return $array;
     }
 
-    // public function getALLCategoryExcept($id){
+    public function getALLCategoryExcept($id){
 
-    //     $dbConn = new DBConnection();
-    //     $conn = $dbConn->getConnection();
-    //     $sql = "SELECT * FROM theloai  WHERE ma_tloai != $id";
-    //     $stmt = $conn->query($sql);
+        $dbConn = new DBConnection();
+        $conn = $dbConn->getConnection();
+        $sql = "SELECT * FROM theloai  WHERE ma_tloai != $id";
+        $stmt = $conn->query($sql);
 
-    //     $categorys = [];
-    //     while($row = $stmt->fetch()){
-    //         $category = new Category($row['ma_tloai'], $row['ten_tloai']);
-    //         array_push($categorys,$category);
-    //     }
-    //     return $categorys;
-    // }
+        $categorys = [];
+        while($row = $stmt->fetch()){
+            $category = new Category($row['ma_tloai'], $row['ten_tloai']);
+            $array = $category->convertToArray();
+            array_push($categorys,$array);
+        }
+        return $categorys;
+    }
 
     public function getAuthorbyArticle($id){
         $dbConn = new DBConnection();
@@ -79,20 +80,21 @@ class ArticleService{
         return $array;
     }
 
-    // public function getALLAuthorExcept($id){
+    public function getALLAuthorExcept($id){
 
-    //     $dbConn = new DBConnection();
-    //     $conn = $dbConn->getConnection();
-    //     $sql = "SELECT * FROM tacgia  WHERE ma_tgia != $id";
-    //     $stmt = $conn->query($sql);
+        $dbConn = new DBConnection();
+        $conn = $dbConn->getConnection();
+        $sql = "SELECT * FROM tacgia  WHERE ma_tgia != $id";
+        $stmt = $conn->query($sql);
 
-    //     $authors = [];
-    //     while($row = $stmt->fetch()){
-    //         $author = new Author($row['ma_tgia'], $row['ten_tgia'], $row['hinh_tgia']);
-    //         array_push($authors,$author);
-    //     }
-    //     return $authors;
-    // }
+        $authors = [];
+        while($row = $stmt->fetch()){
+            $author = new Author($row['ma_tgia'], $row['ten_tgia'], $row['hinh_tgia']);
+            $array = $author->convertToArray();
+            array_push($authors,$array);
+        }
+        return $authors;
+    }
 
     public function getSearchedArticles(){
         $dbConn = new DBConnection();
@@ -180,9 +182,9 @@ class ArticleService{
            VALUES (NULL, '$tieude', '$ten_bhat', '$ma_tloai', '$tomtat', '$noidung', '$ma_tgia', current_timestamp(), '$db_path_completed')";
         $stmt = $conn->prepare($addArticleSql);
         $stmt->execute();
-        if($stmt->execute()){
-            header("Location: index.php?controller=article&action=list");
-        }
+        // if($stmt->execute()){
+        //     header("Location: index.php?controller=article&action=list");
+        // }
     }
 
     public function processEditArticle(){

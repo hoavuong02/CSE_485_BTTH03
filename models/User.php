@@ -6,14 +6,18 @@ class User{
     private $email;
     private $ngay_dki;
     private $admin;
+    private $hashCode;
+    private $active;
 
     // Hàm tạo
-    public function __construct($ten_dnhap, $mat_khau, $email, $ngay_dki, $admin){
+    public function __construct($ten_dnhap, $mat_khau, $email, $ngay_dki, $admin, $hashCode, $active){
         $this->ten_dnhap = $ten_dnhap;
         $this->mat_khau = $mat_khau;
         $this->email = $email;
         $this->ngay_dki= $ngay_dki;
         $this->admin= $admin;
+        $this->hashCode= $hashCode;
+        $this->active= $active;
     }
 
     // Hàm setter và getter;
@@ -58,6 +62,22 @@ class User{
             return TRUE;
         }
     }
+    public function getHashCode(){
+        return $this->hashCode;
+    }
 
+    public function setHashCode($hashCode){
+        $this->hashCode = $hashCode;
+    }
+    public function getActive(){
+        return $this->active;
+    }
+
+    public function setActive($active){
+        $this->active = $active;
+    }
+    public function convertToArray(){
+        return array("ten_dnhap"=>$this->ten_dnhap, "mat_khau"=>$this->mat_khau, "email"=>$this->email, "ngay_dki"=>$this->ngay_dki, "admin"=>$this->admin, "hashCode"=>$this->hashCode, "active"=>$this->active);
+    }
 }
 ?>
