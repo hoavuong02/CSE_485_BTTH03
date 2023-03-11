@@ -2,10 +2,10 @@
 require_once 'vendor/autoload.php';
 include("services/CategoryService.php");
 // include("models/Article.php");
-
+require 'configs/includes/auth.php';
 class CategoryController{
     public function index(){
-       
+            
             $loader = new \Twig\Loader\FilesystemLoader("templates");
             $twig = new Twig\Environment($loader);
             // Nhiệm vụ 1: Tương tác với Services/Models

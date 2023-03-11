@@ -1,6 +1,7 @@
 <?php
 
     include("services\ArticleService.php");
+    
 class ArticleController{
 
     public function detail(){
@@ -26,6 +27,7 @@ class ArticleController{
     }
 
     public function list(){
+        require 'configs/includes/auth.php';
         $loader = new \Twig\Loader\FilesystemLoader("templates");
         $twig = new Twig\Environment($loader);
         $serviceDetail = new ArticleService();
@@ -35,6 +37,7 @@ class ArticleController{
     }
 
     public function add(){
+        require 'configs/includes/auth.php';
         $loader = new \Twig\Loader\FilesystemLoader("templates");
         $twig = new Twig\Environment($loader);
         $articleService = new ArticleService();
@@ -46,12 +49,14 @@ class ArticleController{
     }
 
     public function processAdd(){
+        require 'configs/includes/auth.php';
         $articleService = new ArticleService();
         $processAdd = $articleService-> addArticle();
         header("Location: index.php?controller=article&action=list");
     }
 
     public function edit(){
+        require 'configs/includes/auth.php';
         $loader = new \Twig\Loader\FilesystemLoader("templates");
         $twig = new Twig\Environment($loader);
         $serviceDetail = new ArticleService();
@@ -73,11 +78,13 @@ class ArticleController{
     }
 
     public function processEdit(){
+        require 'configs/includes/auth.php';
         $articleService = new ArticleService();
         $processEdit = $articleService-> processEditArticle(); 
     }
 
     public function delete(){
+        require 'configs/includes/auth.php';
         $articleService = new ArticleService();
         $delete = $articleService-> deleteArticle(); 
     }

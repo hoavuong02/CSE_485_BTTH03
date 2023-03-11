@@ -2,7 +2,7 @@
 require_once 'vendor/autoload.php';
 include("services/AuthorService.php");
 // include("models/Article.php");
-
+require 'configs/includes/auth.php';
 class AuthorController{
     public function index(){
         // require 'configs/include/headerAdmin_global.php';

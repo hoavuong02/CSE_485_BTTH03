@@ -169,7 +169,7 @@
             
         }
         public function processRegister() {
-            include 'configs/includes/Utilities/email_sender.php';
+            include 'Utilities/email_sender.php';
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
                 $userName = $_POST['txtUser'];
