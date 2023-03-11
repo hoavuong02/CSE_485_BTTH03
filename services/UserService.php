@@ -119,6 +119,9 @@
             //tìm trong db bản ghi có tên đăng nhập và mật khẩu giống với người dùng nhập vào
                 $getUserPassword = "SELECT ten_dnhap, mat_khau FROM `user` WHERE ten_dnhap = '$user ' AND mat_khau = '$password'";
                 $stmt = $conn->getConnection()->prepare( $getUserPassword);
+                // $stmt->execute();
+                // $row = $stmt->fetch();
+                // echo $row;
                 // Bước 03: Trả về dữ liệu               
                 if($stmt->execute()){
                     $_SESSION['user'] = $user;
@@ -137,6 +140,8 @@
             }
             
         }
+
+        
         public function getUserLogin(){
             // Bước 01: Kết nối DB Server
             //require db
@@ -152,8 +157,13 @@
             // $users = [];
             $user = new User($userLogin['ten_dnhap'], $userLogin['mat_khau'], $userLogin['email'], $userLogin['ngay_dki'], $userLogin['admin'], $userLogin['hashCode'], $userLogin['active'] );
             $array = $user->convertToArray();
-            
-            return $array;
+            if($array['active']!=1){
+                header("Location: index.php?controller=login&action=index&error=user not active");
+            }
+            else{
+                return $array;
+
+            }
             // $isAdmin = $userLogin['admin'];
             // return $isAdmin;
         }
@@ -197,8 +207,8 @@
             if(isset($_GET['ten_dnhap'])) {
                 $getUserName = $_GET['ten_dnhap'];
                 $getHashCode = $_GET['hashCode'];
-                echo $getUserName;
-                echo $getHashCode;
+                // echo $getUserName;
+                // echo $getHashCode;
                 $sqlUpdateActive = "SELECT * from user where ten_dnhap = '$getUserName' ";
                 $stmt = $conn->getConnection()->prepare( $sqlUpdateActive);
                 $stmt->execute();
