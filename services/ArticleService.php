@@ -45,24 +45,25 @@ class ArticleService{
         $stmt = $conn->query($sql);
         $row = $stmt->fetch();
         $category = new Category($row['ma_tloai'], $row['ten_tloai']);
+        $array = $category->convertToArray();
 
-        return $category;
+        return $array;
     }
 
-    public function getALLCategoryExcept($id){
+    // public function getALLCategoryExcept($id){
 
-        $dbConn = new DBConnection();
-        $conn = $dbConn->getConnection();
-        $sql = "SELECT * FROM theloai  WHERE ma_tloai != $id";
-        $stmt = $conn->query($sql);
+    //     $dbConn = new DBConnection();
+    //     $conn = $dbConn->getConnection();
+    //     $sql = "SELECT * FROM theloai  WHERE ma_tloai != $id";
+    //     $stmt = $conn->query($sql);
 
-        $categorys = [];
-        while($row = $stmt->fetch()){
-            $category = new Category($row['ma_tloai'], $row['ten_tloai']);
-            array_push($categorys,$category);
-        }
-        return $categorys;
-    }
+    //     $categorys = [];
+    //     while($row = $stmt->fetch()){
+    //         $category = new Category($row['ma_tloai'], $row['ten_tloai']);
+    //         array_push($categorys,$category);
+    //     }
+    //     return $categorys;
+    // }
 
     public function getAuthorbyArticle($id){
         $dbConn = new DBConnection();
@@ -73,23 +74,25 @@ class ArticleService{
         $row = $stmt->fetch();
         $author = new Author($row['ma_tgia'], $row['ten_tgia'] , $row['hinh_tgia']);
 
-        return $author;
+        $array = $author->convertToArray();
+
+        return $array;
     }
 
-    public function getALLAuthorExcept($id){
+    // public function getALLAuthorExcept($id){
 
-        $dbConn = new DBConnection();
-        $conn = $dbConn->getConnection();
-        $sql = "SELECT * FROM tacgia  WHERE ma_tgia != $id";
-        $stmt = $conn->query($sql);
+    //     $dbConn = new DBConnection();
+    //     $conn = $dbConn->getConnection();
+    //     $sql = "SELECT * FROM tacgia  WHERE ma_tgia != $id";
+    //     $stmt = $conn->query($sql);
 
-        $authors = [];
-        while($row = $stmt->fetch()){
-            $author = new Author($row['ma_tgia'], $row['ten_tgia'], $row['hinh_tgia']);
-            array_push($authors,$author);
-        }
-        return $authors;
-    }
+    //     $authors = [];
+    //     while($row = $stmt->fetch()){
+    //         $author = new Author($row['ma_tgia'], $row['ten_tgia'], $row['hinh_tgia']);
+    //         array_push($authors,$author);
+    //     }
+    //     return $authors;
+    // }
 
     public function getSearchedArticles(){
         $dbConn = new DBConnection();
@@ -108,7 +111,8 @@ class ArticleService{
         $articles = [];
         while($row = $stmt->fetch()){
             $article = new Article($row['ma_bviet'], $row['tieude'], $row['ten_bhat'], $row['tomtat'], $row['noidung'], $row['hinhanh'], $row['ma_tloai'], $row['ma_tgia']);
-            array_push($articles,$article);
+            $array = $article->convertToArray();
+            array_push($articles,$array);
         }
         // Mảng (danh sách) các đối tượng Article Model
 
@@ -126,7 +130,8 @@ class ArticleService{
         while($row = $stmt->fetch()){
             //ma_tgia = ten_tgia;  ma_tloai = ten_tloai
             $article = new Article($row['ma_bviet'], $row['tieude'], $row['ten_bhat'], $row['tomtat'], $row['noidung'], $row['hinhanh'], $row['ten_tloai'], $row['ten_tgia']);
-            array_push($articles,$article);
+            $array = $article->convertToArray();
+            array_push($articles,$array);
         }
         // Mảng (danh sách) các đối tượng Article Model
 
@@ -288,7 +293,8 @@ class ArticleService{
         $categorys = [];
         while($row = $stmt->fetch()){
             $category = new Category($row['ma_tloai'], $row['ten_tloai']);
-            array_push($categorys, $category);
+            $array = $category->convertToArray();
+            array_push($categorys, $array);
         }
         // Mảng (danh sách) các đối tượng Article Model
 
@@ -305,7 +311,8 @@ class ArticleService{
         $authors = [];
         while($row = $stmt->fetch()){
             $author = new Author($row['ma_tgia'], $row['ten_tgia'], $row['hinh_tgia']);
-            array_push($authors, $author);
+            $array = $author->convertToArray();
+            array_push($authors, $array);
         }
         // Mảng (danh sách) các đối tượng Article Model
 

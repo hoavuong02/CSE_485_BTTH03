@@ -15,4 +15,5 @@ class HomeController{
         $data['article'] = $articles;
         echo $twig->render('/home/index.html', $data); 
     }
+    
 }

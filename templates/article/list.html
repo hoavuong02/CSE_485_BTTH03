@@ -1,0 +1,45 @@
+{% extends "/layout/layoutAdmin.html" %}
+{% block main %}
+<main class="container mt-5 mb-5">
+    <!-- <h3 class="text-center text-uppercase mb-3 text-primary">CẢM NHẬN VỀ BÀI HÁT</h3> -->
+    <div class="row">
+        <div class="col-sm">
+            <a href="index.php?controller=article&action=add" class="btn btn-success">Thêm mới</a>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tiêu đề</th>
+                        <th scope="col">Tên bài hát</th>
+                        <th scope="col">Thể loại</th>
+                        <th scope="col">Tác giả</th>
+                        <th>Sửa</th>
+                        <th>Xóa</th>
+                    </tr>
+                </thead>
+                {% for a in article %}
+                    {% set counter = ( counter | default(0) ) + 1 %}
+                <tbody>
+                    <tr>
+                        <th scope="row">{{counter}}</th>
+                        <td>{{a.tieude}}</td>
+                        <td>{{a.ten_bhat}}</td>
+                        <!-- ma the loai = ten the loai -->
+                        <td>{{a.ma_tloai}}</td> 
+                        <!-- ma tac gia = ten tac gia -->
+                        <td>{{a.ma_tgia}}</td>
+                        <td>
+                            <a href="index.php?controller=article&action=edit&id={{a.ma_bviet}}"><i class="fa-solid fa-pen-to-square"></i></a>
+                        </td>
+                        <td>
+                            <a onclick = "return confirm('Bạn có chắc chắn muốn xóa bài viết này?');"  href="index.php?controller=article&action=delete&id={{a.ma_bviet}}" > <i class="fa-solid fa-trash"></i> </a>
+                        </td>
+                    </tr>
+
+                </tbody>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</main>
+{% endblock %}

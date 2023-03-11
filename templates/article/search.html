@@ -1,0 +1,25 @@
+{% extends "/layout/layout.html" %}
+{% block main %}
+<div id="carouselExampleIndicators" class="carousel slide">
+            
+</div>
+<main class="container-fluid mt-3">
+    <div>
+        <h3 style = "font-family : var(--fontfamily-primary) " class="text-center text-uppercase mb-3 text-primary">Kết quả tìm kiếm</h3>
+        <div class="row">
+            {% for a in article %}
+                        <div class="col-sm-3">
+                            <div class="card mb-2" style="width: 100%;">
+                                <img src="assets\{{ a.hinhanh }}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <a href="index.php?controller=article&action=detail&id={{ a.ma_bviet }}" class="text-decoration-none text-dark rgba-red-strong">
+                                        {{ a.tieude }}
+                                    </a>
+                                </div>
+                            </div>
+                    </div>
+                {% endfor %}
+        </div>
+    </div>    
+</main>
+{% endblock %}

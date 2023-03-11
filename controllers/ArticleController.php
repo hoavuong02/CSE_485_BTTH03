@@ -2,30 +2,36 @@
 
     include("services\ArticleService.php");
 class ArticleController{
-    public function index(){
-        $service = new ArticleService();
-        $service->getAllArticles();
-        include("views/article/add_article.php");
-    }
 
     public function detail(){
+        $loader = new \Twig\Loader\FilesystemLoader("templates");
+        $twig = new Twig\Environment($loader);
         $serviceDetail = new ArticleService();
         $detailArticle = $serviceDetail->getDetailArticle();
-        $nameCategory = $serviceDetail->getCategorybyArticle($detailArticle->getMaTheLoai());
-        $nameAuthor = $serviceDetail->getAuthorbyArticle($detailArticle->getMaTacGia());
-        include("views/article/detail_article.php");
+        $nameCategory = $serviceDetail->getCategorybyArticle($detailArticle['ma_tloai']);
+        $nameAuthor = $serviceDetail->getAuthorbyArticle($detailArticle['ma_tgia']);
+        $data['article'] = $detailArticle;
+        $data['nameCategory'] = $nameCategory;
+        $data['nameAuthor'] = $nameAuthor;
+        echo $twig->render('/article/detail.html', $data); 
     }
 
     public function search(){
+        $loader = new \Twig\Loader\FilesystemLoader("templates");
+        $twig = new Twig\Environment($loader);
         $serviceSearch = new ArticleService();
         $searchedlArticle = $serviceSearch->getSearchedArticles();
-        include("views/article/search_article.php");
+        $data['article'] = $searchedlArticle;
+        echo $twig->render('/article/search.html', $data); 
     }
 
     public function list(){
+        $loader = new \Twig\Loader\FilesystemLoader("templates");
+        $twig = new Twig\Environment($loader);
         $serviceDetail = new ArticleService();
         $listArticles = $serviceDetail->getListArticles();
-        include("views/article/list_article.php");
+        $data['article'] = $listArticles;
+        echo $twig->render('/article/list.html', $data); 
     }
 
     public function edit(){
@@ -50,10 +56,14 @@ class ArticleController{
     }
     
     public function add(){
+        $loader = new \Twig\Loader\FilesystemLoader("templates");
+        $twig = new Twig\Environment($loader);
         $articleService = new ArticleService();
         $categorys = $articleService->getAllCategory();
         $authors = $articleService->getAllAuthor();
-        include("views/article/add_article.php");
+        $data['category'] = $categorys;
+        $data['author'] = $authors;
+        echo $twig->render('/article/add.html', $data); 
     }
 
     public function processAdd(){
