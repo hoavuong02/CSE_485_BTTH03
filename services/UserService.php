@@ -117,13 +117,15 @@
                 $user = $_POST['txtUser'];
                 $password = $_POST['txtPassword'];           
             //tìm trong db bản ghi có tên đăng nhập và mật khẩu giống với người dùng nhập vào
-                $getUserPassword = "SELECT ten_dnhap, mat_khau FROM `user` WHERE ten_dnhap = '$user ' AND mat_khau = '$password'";
+                $getUserPassword = "SELECT ten_dnhap, mat_khau, active FROM `user` WHERE ten_dnhap = '$user ' AND mat_khau = '$password'";
                 $stmt = $conn->getConnection()->prepare( $getUserPassword);
-                // $stmt->execute();
-                // $row = $stmt->fetch();
-                // echo $row;
+                $stmt->execute();
+                $row = $stmt->fetch();
                 // Bước 03: Trả về dữ liệu               
-                if($stmt->execute()){
+                if($row){
+                    if($row['active'] != 1) {
+                        header("Location: index.php?controller=login&action=index&error=not actived yet");
+                    }
                     $_SESSION['user'] = $user;
                     header("Location: index.php?controller=admin&action=index");
                 }
