@@ -179,6 +179,8 @@
             
         }
         public function processRegister() {
+            $temp = explode('\\', dirname(__FILE__, 2));
+            $lastItem = end($temp);
             include 'Utilities/email_sender.php';
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
@@ -197,7 +199,7 @@
         
                 $emailServer = new MyEmailServer();
                 $emailSender = new EmailSender($emailServer);
-                $emailSender->send($email, "This is a registration email", "http://localhost/CSE485_CNW/CSE_485_BTTH03/index.php?controller=signUp&action=active&userName=$userName&hashCode=$hash");
+                $emailSender->send($email, "This is a registration email", "http://localhost/" . $lastItem . "/index.php?controller=signUp&action=active&ten_dnhap=$userName&hashCode=$hash");
                 
             }
         }

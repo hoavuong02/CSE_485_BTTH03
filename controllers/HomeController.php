@@ -14,6 +14,7 @@ class HomeController{
         $articles = $articelService->getAllArticles();
         $data['article'] = $articles;
         echo $twig->render('/home/index.html', $data); 
+
     }
     
 }
